@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+else
+    echo "Cannot detect OS version. Exiting."
+    exit 1
+fi
+
+echo "Detected OS: $PRETTY_NAME"
+
+if [[ "$ID" == "centos" && "$VERSION_ID" == "7" ]]; then
+    PKG_MGR="yum"
+elif [[ "$ID" == "almalinux" && "$VERSION_ID" == "8" ]]; then
+    PKG_MGR="dnf"
+else
+    echo "Unsupported OS. Only CentOS 7 and AlmaLinux 8 are supported."
+    exit 1
+fi
+
+echo "Setting up SaltStack repository..."
+sudo curl -fsSL https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.repo -o /etc/yum.repos.d/salt.repo
+
+echo "Cleaning package cache..."
+sudo $PKG_MGR clean all -y
+
+echo "Installing salt-minion version 3006.16..."
+sudo $PKG_MGR install -y salt-minion-3006.16
+
+echo "Enabling and starting salt-minion service..."
+sudo systemctl enable --now salt-minion
+
+echo "Salt Minion version installed:"
+salt-minion --version
