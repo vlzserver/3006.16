@@ -12,7 +12,8 @@ echo "Detected OS: $PRETTY_NAME"
 
 if [[ "$ID" == "centos" && "$VERSION_ID" == "7" ]]; then
     PKG_MGR="yum"
-elif [[ "$ID" == "almalinux" && "$VERSION_ID" == "8" ]]; then
+elif [[ "$ID" == "almalinux" && "$VERSION_ID" =~ ^8 ]]; then
+    # Matches 8, 8.1, 8.2, ..., 8.10, etc.
     PKG_MGR="dnf"
 else
     echo "Unsupported OS. Only CentOS 7 and AlmaLinux 8 are supported."
