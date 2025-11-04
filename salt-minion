@@ -10,13 +10,15 @@ fi
 
 echo "Detected OS: $PRETTY_NAME"
 
-# Check for supported CentOS and AlmaLinux versions
+# Check for CentOS 7, CentOS 8, or AlmaLinux 8
 if [[ "$ID" == "centos" && "$VERSION_ID" == "7" ]]; then
-    PKG_MGR="yum"  # CentOS 7 uses yum
-elif [[ "$ID" == "centos" && "$VERSION_ID" == "8" ]]; then
-    PKG_MGR="dnf"  # CentOS 8 uses dnf
+    PKG_MGR="yum"
+elif [[ "$ID" == "centos" && "$VERSION_ID" =~ ^8 ]]; then
+    # Match CentOS 8 and higher versions (8, 8.1, 8.2, etc.)
+    PKG_MGR="dnf"
 elif [[ "$ID" == "almalinux" && "$VERSION_ID" =~ ^8 ]]; then
-    PKG_MGR="dnf"  # AlmaLinux 8 uses dnf
+    # AlmaLinux 8
+    PKG_MGR="dnf"
 else
     echo "Unsupported OS. Only CentOS 7, CentOS 8, and AlmaLinux 8 are supported."
     exit 1
@@ -35,4 +37,4 @@ echo "Enabling and starting salt-minion service..."
 sudo systemctl enable --now salt-minion
 
 echo "Salt Minion version installed:"
-salt-m
+salt-minion --version
