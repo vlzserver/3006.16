@@ -10,7 +10,7 @@ fi
 
 echo "Detected OS: $PRETTY_NAME"
 
-# Check for CentOS 7, CentOS 8, or AlmaLinux 8
+# Check for CentOS 7, CentOS 8, AlmaLinux 8, or Rocky Linux 8
 if [[ "$ID" == "centos" && "$VERSION_ID" == "7" ]]; then
     PKG_MGR="yum"
 elif [[ "$ID" == "centos" && "$VERSION_ID" =~ ^8 ]]; then
@@ -19,8 +19,11 @@ elif [[ "$ID" == "centos" && "$VERSION_ID" =~ ^8 ]]; then
 elif [[ "$ID" == "almalinux" && "$VERSION_ID" =~ ^8 ]]; then
     # AlmaLinux 8
     PKG_MGR="dnf"
+elif [[ "$ID" == "rocky" && "$VERSION_ID" =~ ^8 ]]; then
+    # Rocky Linux 8.x
+    PKG_MGR="dnf"
 else
-    echo "Unsupported OS. Only CentOS 7, CentOS 8, and AlmaLinux 8 are supported."
+    echo "Unsupported OS. Only CentOS 7, CentOS 8, AlmaLinux 8, and Rocky Linux 8 are supported."
     exit 1
 fi
 
